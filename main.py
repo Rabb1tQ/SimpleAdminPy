@@ -13,6 +13,7 @@ from app.core.database import init_db, close_db
 from app.core.logging import setup_logging
 from app.core.redis import RedisClient
 from app.middleware.operation_log import OperationLogMiddleware
+from app.utils.init_data import init_data
 
 
 @asynccontextmanager
@@ -21,6 +22,7 @@ async def lifespan(app: FastAPI):
     # 启动时
     setup_logging()
     await init_db()
+    await init_data()  # 自动初始化数据（已存在则跳过）
     # 初始化所有 Redis 连接池
     await RedisClient.get_session_client()
     await RedisClient.get_cache_client()
